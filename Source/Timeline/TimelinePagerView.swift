@@ -120,23 +120,24 @@ public class TimelinePagerView: UIView {
 
 extension TimelinePagerView: DayViewStateUpdating {
   public func move(from oldDate: Date, to newDate: Date) {
+    let oldDate = oldDate.dateOnly()
     let newDate = newDate.dateOnly()
     if newDate.isEarlier(than: oldDate) {
-      var timelineDate = newDate
+      var timelineDate = newDate.subtract(TimeChunk.dateComponents(days: 1))
       for timelineContainer in timelinePager.reusableViews {
         timelineContainer.timeline.date = timelineDate
         timelineDate = timelineDate.add(TimeChunk.dateComponents(days: 1))
         updateTimeline(timelineContainer.timeline)
       }
-      timelinePager.scrollBackward()
+      //timelinePager.scrollBackward()
     } else if newDate.isLater(than: oldDate) {
-      var timelineDate = newDate
+      var timelineDate = newDate.add(TimeChunk.dateComponents(days: 1))
       for timelineContainer in timelinePager.reusableViews.reversed() {
         timelineContainer.timeline.date = timelineDate
         timelineDate = timelineDate.subtract(TimeChunk.dateComponents(days: 1))
         updateTimeline(timelineContainer.timeline)
       }
-      timelinePager.scrollForward()
+      //timelinePager.scrollForward()
     }
   }
 }
