@@ -2,6 +2,7 @@ import UIKit
 import DateToolsSwift
 
 open class Event: EventDescriptor {
+  public var isNewEvent: Bool = false
   public var datePeriod = TimePeriod()
   public var text = ""
   public var attributedText: NSAttributedString?

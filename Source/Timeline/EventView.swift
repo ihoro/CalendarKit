@@ -8,6 +8,7 @@ protocol EventViewDelegate: class {
 }
 
 public protocol EventDescriptor: class {
+  var isNewEvent: Bool {get}
   var datePeriod: TimePeriod {get}
   var text: String {get}
   var attributedText: NSAttributedString? {get}
@@ -83,19 +84,39 @@ open class EventView: UIView {
 
   override open func draw(_ rect: CGRect) {
     super.draw(rect)
-    let context = UIGraphicsGetCurrentContext()
-    context!.interpolationQuality = .none
-    context?.saveGState()
-    context?.setStrokeColor(color.cgColor)
-    context?.setLineWidth(3)
-    context?.translateBy(x: 0, y: 0.5)
+    guard let context = UIGraphicsGetCurrentContext() else { return }
+    context.interpolationQuality = .none
+    context.saveGState()
+    context.setStrokeColor(color.cgColor)
+    context.setLineWidth(3)
+    context.translateBy(x: 0, y: 0.5)
     let x: CGFloat = 0
     let y: CGFloat = 0
-    context?.beginPath()
-    context?.move(to: CGPoint(x: x, y: y))
-    context?.addLine(to: CGPoint(x: x, y: (bounds).height))
-    context?.strokePath()
-    context?.restoreGState()
+    context.beginPath()
+    context.move(to: CGPoint(x: x, y: y))
+    context.addLine(to: CGPoint(x: x, y: (bounds).height))
+    context.strokePath()
+
+    // diagonal lines background pattern
+    if descriptor != nil && descriptor!.isNewEvent {
+      let T: CGFloat = 2     // desired thickness of lines
+      let G: CGFloat = 4     // desired gap between lines
+      let W = rect.size.width
+      let H = rect.size.height
+      
+      context.setStrokeColor(UIColor(red:1, green:1, blue:1, alpha:0.3).cgColor)
+      context.setLineWidth(T)
+      
+      var p = -(W > H ? W : H) - T
+      while p <= W {
+        context.move( to: CGPoint(x: p-T, y: -T) )
+        context.addLine( to: CGPoint(x: p+T+H, y: T+H) )
+        context.strokePath()
+        p += G + T + T
+      }
+    }
+    
+    context.restoreGState()
   }
 
   override open func layoutSubviews() {
