@@ -56,7 +56,7 @@ public class TimelineView: UIView, ReusableView {
     return bounds.width - leftInset
   }
     
-  var is24hClock = true {
+  var is24hClock = Locale.autoupdatingCurrent.uses24hClock() {
     didSet {
       setNeedsDisplay()
     }
