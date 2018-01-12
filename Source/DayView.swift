@@ -11,7 +11,9 @@ public protocol DayViewDelegate: class {
 }
 
 public class DayView: UIView {
-
+  
+  var options = DayViewOptions()
+  
   public weak var dataSource: EventDataSource? {
     get {
       return timelinePagerView.dataSource
@@ -49,7 +51,7 @@ public class DayView: UIView {
   }
 
   let dayHeaderView = DayHeaderView()
-  let timelinePagerView = TimelinePagerView()
+  var timelinePagerView: TimelinePagerView!
 
   public var state: DayViewState? {
     didSet {
@@ -59,6 +61,12 @@ public class DayView: UIView {
   }
 
   var style = CalendarStyle()
+  
+  public init(withOptions options: DayViewOptions) {
+    super.init(frame: .zero)
+    self.options = options
+    configure()
+  }
 
   public init(state: DayViewState) {
     super.init(frame: .zero)
@@ -77,6 +85,10 @@ public class DayView: UIView {
   }
 
   func configure() {
+    timelinePagerView = TimelinePagerView()
+    timelinePagerView.options = options
+    timelinePagerView.configure()
+    
     addSubview(timelinePagerView)
     addSubview(dayHeaderView)
     timelinePagerView.delegate = self

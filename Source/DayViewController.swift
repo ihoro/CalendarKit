@@ -1,10 +1,32 @@
 import UIKit
 import DateToolsSwift
 
+public struct DayViewOptions {
+  public var canScrollVerticallyWithinDay: Bool = true
+  public var canScrollHorizontallyToSwitchDay: Bool = true
+  
+  public init() {}
+}
+
 open class DayViewController: UIViewController, EventDataSource, DayViewDelegate {
+  
+  var options = DayViewOptions()
 
-  public lazy var dayView: DayView = DayView()
-
+  public lazy var dayView: DayView = DayView(withOptions: options)
+  
+  override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+  }
+  
+  required public init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  
+  public init(withOptions options: DayViewOptions) {
+    self.options = options
+    super.init(nibName: nil, bundle: nil)
+  }
+  
   override open func viewDidLoad() {
     super.viewDidLoad()
     self.edgesForExtendedLayout = UIRectEdge()

@@ -11,6 +11,8 @@ public protocol TimelinePagerViewDelegate: class {
 }
 
 public class TimelinePagerView: UIView {
+  
+  var options = DayViewOptions()
 
   public weak var dataSource: EventDataSource?
   public weak var delegate: TimelinePagerViewDelegate?
@@ -38,14 +40,14 @@ public class TimelinePagerView: UIView {
 
   override public init(frame: CGRect) {
     super.init(frame: frame)
-    configure()
+    //configure()
   }
 
   required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    configure()
+    //configure()
   }
-
+  
   func configure() {
     configureTimelinePager()
   }
@@ -70,6 +72,7 @@ public class TimelinePagerView: UIView {
   }
 
   func configureTimelinePager() {
+    timelinePager.isScrollEnabled = options.canScrollHorizontallyToSwitchDay
     var verticalScrollViews = [TimelineContainer]()
     for i in -1...1 {
       let timeline = TimelineView(frame: bounds)
@@ -79,6 +82,7 @@ public class TimelinePagerView: UIView {
       timeline.date = Date().add(TimeChunk.dateComponents(days: i))
 
       let verticalScrollView = TimelineContainer()
+      verticalScrollView.isScrollEnabled = options.canScrollVerticallyWithinDay
       verticalScrollView.timeline = timeline
       verticalScrollView.addSubview(timeline)
       verticalScrollView.contentSize = timeline.frame.size
